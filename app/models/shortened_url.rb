@@ -1,5 +1,3 @@
-require 'uri'
-
 class ShortenedUrl < ApplicationRecord
 
   validates :real_url, presence: true
@@ -14,9 +12,6 @@ class ShortenedUrl < ApplicationRecord
   end
 
   def save_title_page
-    website = Nokogiri::HTML.parse(URI.open(real_url))
-    self.title = website.title
+    
   end
-
-
 end
