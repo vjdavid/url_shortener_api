@@ -1,11 +1,22 @@
+require 'uri'
+
 class ShortenedUrl < ApplicationRecord
-  before_validation(on: :create) do
-    self.real_url = url
-    self.path_url = get_url_path(url)
-    self.shorted_url = get_url_path(url) + SecureRandom.hex(4)
+
+  validates :real_url, presence: true
+  after_validation :find_or_save, on: :create
+  before_save :save_title_page
+
+  private
+
+  def find_or_save
+    self.path_url = SecureRandom.hex(2)
+    self.shorted_url = 'http://sample.local/' + path_url
   end
 
-  def get_url_path(real_url)
-    URI.join(real_url, "/").to_s
+  def save_title_page
+    website = Nokogiri::HTML.parse(URI.open(real_url))
+    self.title = website.title
   end
+
+
 end
