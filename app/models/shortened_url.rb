@@ -12,6 +12,6 @@ class ShortenedUrl < ApplicationRecord
   end
 
   def save_title_page
-    
+    FetchTitlePageJob.perform_later(real_url, path_url)
   end
 end
